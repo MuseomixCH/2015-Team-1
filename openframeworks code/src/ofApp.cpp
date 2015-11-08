@@ -6,7 +6,7 @@ void ofApp::setup(){
     ofEnableSmoothing();
     ofEnableAlphaBlending();
     ofHideCursor();
-    _video.setDeviceID(0);
+    _video.setDeviceID(1);
     _video.setDesiredFrameRate(60);
     _video.initGrabber(ofGetWidth(), ofGetHeight());
     _currentFilter = 0;
@@ -30,7 +30,7 @@ void ofApp::setup(){
     
     m_shoot = false;
     
-    m_fbo.allocate(600,800,GL_RGB);
+    m_fbo.allocate(720,ofGetHeight(),GL_RGB);
     m_fbo.begin();
     ofClear(255,255,255, 0);
     m_fbo.end();
@@ -129,7 +129,7 @@ void ofApp::setupArduino() {
     // (ie, COM4 on a pc, /dev/tty.... on linux, /dev/tty... on a mac)
     // arduino users check in arduino app....
     int baud = 9600;
-    serial.setup("/dev/cu.usbmodem1411", baud); //open the first device
+    serial.setup("/dev/cu.usbmodem1421", baud); //open the first device
     //serial.setup("COM4", baud); // windows example
     //serial.setup("/dev/tty.usbserial-A4001JEC", baud); // mac osx example
     //serial.setup("/dev/ttyUSB0", baud); //linux example
@@ -218,25 +218,25 @@ void ofApp::draw(){
 
     ofPushMatrix();
     ofScale(-1, 1);
-    ofTranslate(-_video.getWidth()+340, 0);
+    ofTranslate(-_video.getWidth()+280, 0);
     _filters[_currentFilter]->begin();
     
     if(int(time<6 && time>0)){
         if(m_imageOutput.isAllocated()){
-        m_imageOutput.draw(340,0);
+        m_imageOutput.draw(280,0);
         }
     }else{
         _video.draw(0,0);
     }
     _filters[_currentFilter]->end();
     ofPopMatrix();
-    frames[frameIndex].draw(ofGetWidth()*0.5 - 640,0, 600,800);
+    frames[frameIndex].draw(ofGetWidth()*0.5 - 640,0, 720,ofGetHeight());
     if(time<=9 && time>6){
-        contdown.drawString(ofToString(time-6), ofGetWidth()*0.5-175-340, ofGetHeight()*0.5+200);
+        contdown.drawString(ofToString(time-6), ofGetWidth()*0.5-175-280, ofGetHeight()*0.5+200);
     }
     else if((9-(timer- timingContdown)/1000)>5.7 && (9-(timer- timingContdown)/1000)<5.9){
         ofFill();
-        ofDrawRectangle(-340, 0, ofGetWidth(), ofGetHeight());
+        ofDrawRectangle(-280, 0, ofGetWidth(), ofGetHeight());
         synth.play();
     }
     //    ofDrawBitmapString( _filters[_currentFilter]->getName() + " Filter\n(press SPACE to change filters)", ofPoint(40, 20));
@@ -250,7 +250,7 @@ void ofApp::draw(){
     
 
     m_fboFrame.draw(0,0);
-    m_fbo.draw(ofGetWidth()*0.5-300,0);
+    m_fbo.draw(ofGetWidth()*0.5-360,0);
 }
 
 //--------------------------------------------------------------
